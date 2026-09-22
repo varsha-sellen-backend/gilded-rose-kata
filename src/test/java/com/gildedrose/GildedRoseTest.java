@@ -227,4 +227,37 @@ class GildedRoseTest {
             assertEquals(0, items[0].quality);
         }
     }
+    @Nested
+    @DisplayName("Multiple items in one inventory")
+    class MultipleItemsInInventory {
+
+        @Test
+        @DisplayName("each item updates independently and correctly when processed together")
+        void eachItemUpdatesIndependently() {
+            Item[] items = new Item[]{
+                new Item("+5 Dexterity Vest", 10, 20),
+                new Item("Aged Brie", 10, 20),
+                new Item("Backstage passes to a TAFKAL80ETC concert", 10, 20),
+                new Item("Sulfuras, Hand of Ragnaros", 10, 80),
+                new Item("Conjured Mana Cake", 10, 20)
+            };
+
+            new GildedRose(items).updateQuality();
+
+            assertEquals(9, items[0].sellIn);
+            assertEquals(19, items[0].quality);
+
+            assertEquals(9, items[1].sellIn);
+            assertEquals(21, items[1].quality);
+
+            assertEquals(9, items[2].sellIn);
+            assertEquals(22, items[2].quality);
+
+            assertEquals(10, items[3].sellIn);
+            assertEquals(80, items[3].quality);
+
+            assertEquals(9, items[4].sellIn);
+            assertEquals(18, items[4].quality);
+        }
+    }
 }

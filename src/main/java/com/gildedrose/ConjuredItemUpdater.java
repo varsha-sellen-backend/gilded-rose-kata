@@ -12,13 +12,7 @@ class ConjuredItemUpdater implements ItemUpdater {
     }
 
     private void decreaseQualityTwice(Item item) {
-        decreaseQuality(item);
-        decreaseQuality(item);
-    }
-
-    private void decreaseQuality(Item item) {
-        if (item.quality > 0) {
-            item.quality--;
-        }
+        QualityMath.decrease(item);
+        QualityMath.decrease(item);
     }
 }
