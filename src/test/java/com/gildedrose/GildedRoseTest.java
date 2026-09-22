@@ -60,7 +60,7 @@ class GildedRoseTest {
         }
 
         @Test
-        @DisplayName("FLAG: quality increases by 2 per day after sell date (not explicit in requirements)")
+        @DisplayName("quality increases by 2 per day after sell date (preserved existing behavior)")
         void increasesByTwoAfterSellDate() {
             Item[] items = new Item[]{new Item("Aged Brie", 0, 20)};
             new GildedRose(items).updateQuality();
@@ -184,6 +184,47 @@ class GildedRoseTest {
             new GildedRose(items).updateQuality();
             assertEquals(80, items[0].quality);
             assertEquals(-5, items[0].sellIn);
+        }
+    }
+
+    @Nested
+    @DisplayName("Conjured items")
+    class Conjured {
+
+        private static final String NAME = "Conjured Mana Cake";
+
+        @Test
+        @DisplayName("quality decreases by 2 per day before sell date (twice normal rate)")
+        void decreasesByTwoBeforeSellDate() {
+            Item[] items = new Item[]{new Item(NAME, 10, 20)};
+            new GildedRose(items).updateQuality();
+            assertEquals(9, items[0].sellIn);
+            assertEquals(18, items[0].quality);
+        }
+
+        @Test
+        @DisplayName("quality decreases by 4 per day after sell date (twice normal's post-expiry rate)")
+        void decreasesByFourAfterSellDate() {
+            Item[] items = new Item[]{new Item(NAME, 0, 20)};
+            new GildedRose(items).updateQuality();
+            assertEquals(-1, items[0].sellIn);
+            assertEquals(16, items[0].quality);
+        }
+
+        @Test
+        @DisplayName("quality never goes negative")
+        void qualityNeverNegative() {
+            Item[] items = new Item[]{new Item(NAME, 10, 1)};
+            new GildedRose(items).updateQuality();
+            assertEquals(0, items[0].quality);
+        }
+
+        @Test
+        @DisplayName("quality never goes negative even after sell date")
+        void qualityNeverNegativeAfterSellDate() {
+            Item[] items = new Item[]{new Item(NAME, 0, 3)};
+            new GildedRose(items).updateQuality();
+            assertEquals(0, items[0].quality);
         }
     }
 }
