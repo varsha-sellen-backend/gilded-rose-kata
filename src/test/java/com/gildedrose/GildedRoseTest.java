@@ -293,6 +293,19 @@ class GildedRoseTest {
             assertEquals(9, items[0].sellIn);
             assertEquals(18, items[0].quality);
         }
+
+        @Test
+        @DisplayName("over several days: degrades by 2, then by 4 after the sell date, and stops at 0")
+        void degradesAcrossSellDateOverSeveralDays() {
+            Item[] items = new Item[]{new Item(NAME, 2, 10)};
+            GildedRose app = new GildedRose(items);
+            int[] expectedQuality = {8, 6, 2, 0};
+            for (int day = 0; day < expectedQuality.length; day++) {
+                app.updateQuality();
+                assertEquals(expectedQuality[day], items[0].quality, "quality after day " + (day + 1));
+            }
+            assertEquals(-2, items[0].sellIn);
+        }
     }
     @Nested
     @DisplayName("Multiple items in one inventory")
