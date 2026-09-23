@@ -31,6 +31,15 @@ class GildedRoseTest {
         }
 
         @Test
+        @DisplayName("sellIn == 1 (last day before sell date): quality still decreases by 1")
+        void lastDayBeforeSellDate() {
+            Item[] items = new Item[]{new Item("+5 Dexterity Vest", 1, 20)};
+            new GildedRose(items).updateQuality();
+            assertEquals(0, items[0].sellIn);
+            assertEquals(19, items[0].quality);
+        }
+
+        @Test
         @DisplayName("quality never goes negative")
         void qualityNeverNegative() {
             Item[] items = new Item[]{new Item("+5 Dexterity Vest", 5, 0)};
@@ -68,6 +77,15 @@ class GildedRoseTest {
         }
 
         @Test
+        @DisplayName("sellIn == 1 (last day before sell date): quality still increases by 1")
+        void lastDayBeforeSellDate() {
+            Item[] items = new Item[]{new Item("Aged Brie", 1, 20)};
+            new GildedRose(items).updateQuality();
+            assertEquals(0, items[0].sellIn);
+            assertEquals(21, items[0].quality);
+        }
+
+        @Test
         @DisplayName("quality never exceeds 50")
         void qualityNeverExceeds50() {
             Item[] items = new Item[]{new Item("Aged Brie", 10, 50)};
@@ -99,6 +117,15 @@ class GildedRoseTest {
         }
 
         @Test
+        @DisplayName("sellIn == 11: quality still increases by 1")
+        void elevenDaysLeft() {
+            Item[] items = new Item[]{new Item(NAME, 11, 20)};
+            new GildedRose(items).updateQuality();
+            assertEquals(10, items[0].sellIn);
+            assertEquals(21, items[0].quality);
+        }
+
+        @Test
         @DisplayName("sellIn == 10: quality increases by 2")
         void exactlyTenDaysLeft() {
             Item[] items = new Item[]{new Item(NAME, 10, 20)};
@@ -115,6 +142,15 @@ class GildedRoseTest {
         }
 
         @Test
+        @DisplayName("sellIn == 6: quality still increases by 2")
+        void sixDaysLeft() {
+            Item[] items = new Item[]{new Item(NAME, 6, 20)};
+            new GildedRose(items).updateQuality();
+            assertEquals(5, items[0].sellIn);
+            assertEquals(22, items[0].quality);
+        }
+
+        @Test
         @DisplayName("sellIn == 5: quality increases by 3")
         void exactlyFiveDaysLeft() {
             Item[] items = new Item[]{new Item(NAME, 5, 20)};
@@ -127,6 +163,15 @@ class GildedRoseTest {
         void betweenOneAndFiveDaysLeft() {
             Item[] items = new Item[]{new Item(NAME, 3, 20)};
             new GildedRose(items).updateQuality();
+            assertEquals(23, items[0].quality);
+        }
+
+        @Test
+        @DisplayName("sellIn == 1 (day before concert): quality increases by 3, not dropped to 0")
+        void oneDayLeft() {
+            Item[] items = new Item[]{new Item(NAME, 1, 20)};
+            new GildedRose(items).updateQuality();
+            assertEquals(0, items[0].sellIn);
             assertEquals(23, items[0].quality);
         }
 
@@ -209,6 +254,15 @@ class GildedRoseTest {
             new GildedRose(items).updateQuality();
             assertEquals(-1, items[0].sellIn);
             assertEquals(16, items[0].quality);
+        }
+
+        @Test
+        @DisplayName("sellIn == 1 (last day before sell date): quality decreases by 2, not 4")
+        void lastDayBeforeSellDate() {
+            Item[] items = new Item[]{new Item(NAME, 1, 20)};
+            new GildedRose(items).updateQuality();
+            assertEquals(0, items[0].sellIn);
+            assertEquals(18, items[0].quality);
         }
 
         @Test
