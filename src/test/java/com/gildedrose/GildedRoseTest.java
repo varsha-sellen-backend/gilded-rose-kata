@@ -220,11 +220,24 @@ class GildedRoseTest {
         }
 
         @Test
-        @DisplayName("quality never goes negative even after sell date")
+        @DisplayName("quality floor holds after sell date regardless of degradation rate")
         void qualityNeverNegativeAfterSellDate() {
-            Item[] items = new Item[]{new Item(NAME, 0, 3)};
+            // quality=1 is low enough to hit the floor under the correct rate (twice-normal,
+            // -4 that tick) or any lesser rate, so this test isolates the floor guard itself
+            // rather than accidentally also asserting the rate (which the two tests above
+            // already cover on their own).
+            Item[] items = new Item[]{new Item(NAME, 0, 1)};
             new GildedRose(items).updateQuality();
             assertEquals(0, items[0].quality);
+        }
+
+        @Test
+        @DisplayName("routes any item name starting with \"Conjured\", not just \"Conjured Mana Cake\"")
+        void generalizesToOtherConjuredItemNames() {
+            Item[] items = new Item[]{new Item("Conjured Bread", 10, 20)};
+            new GildedRose(items).updateQuality();
+            assertEquals(9, items[0].sellIn);
+            assertEquals(18, items[0].quality);
         }
     }
     @Nested
